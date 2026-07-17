@@ -12,16 +12,23 @@ import java.util.UUID;
 @Service
 public class PaymentService {
 
+    private final PaymentValidator paymentValidator;
+    private final PaymentProcessingService paymentProcessingService;
     private final PaymentRepository paymentRepository;
+    private final PaymentNotificationService notificationService;
 
-    public PaymentService(PaymentRepository paymentRepository) {
+    public PaymentService(PaymentValidator paymentValidator,
+                          PaymentProcessingService paymentProcessingService,
+                          PaymentRepository paymentRepository,
+                          PaymentNotificationService notificationService) {
+        this.paymentValidator = paymentValidator;
+        this.paymentProcessingService = paymentProcessingService;
         this.paymentRepository = paymentRepository;
+        this.notificationService = notificationService;
     }
 
     public Payment process(PaymentRequest request){
-        if(request.amount() == null || request.amount().signum() <= 0){
-            throw new IllegalArgumentException("Payment amount must be greater than zero");
-        }
+        paymentValidator.validate(request);
 
 
         Payment payment = new Payment(
@@ -34,32 +41,13 @@ public class PaymentService {
                 Instant.now()
         );
 
-        switch (request.paymentMethod()) {
-            case PIX -> {
-                System.out.println("Processing PIX payment");
-                payment.setStatus(PaymentStatus.APPROVED);
-            }
+        paymentProcessingService.process(payment);
 
-            case CREDIT_CARD -> {
-                System.out.println("Processing credit card payment");
-                payment.setStatus(PaymentStatus.APPROVED);
-            }
+        paymentRepository.save(payment);
 
-            case BANK_TRANSFER -> {
-                System.out.println("Processing bank transfer payment");
+        notificationService.send(payment);
 
-                payment.setStatus(PaymentStatus.PENDING);
-            }
-        }
-
-        Payment paymentResponse = paymentRepository.save(payment);
-
-        System.out.println(
-                "Sending notification to customer: "
-                        + payment.getCustomerId()
-        );
-
-        return paymentResponse;
+        return payment;
     }
 
 
