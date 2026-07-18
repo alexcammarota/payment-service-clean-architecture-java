@@ -1,34 +1,26 @@
 package com.alexcammarota.payment_service.service;
 
 import com.alexcammarota.payment_service.model.Payment;
-import com.alexcammarota.payment_service.model.PaymentStatus;
+import com.alexcammarota.payment_service.service.processor.PaymentProcessor;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class PaymentProcessingService {
 
+    private final List<PaymentProcessor> paymentProcessors;
+
+    public PaymentProcessingService(List<PaymentProcessor> paymentProcessors){
+        this.paymentProcessors = paymentProcessors;
+    }
 
     public void process(Payment payment){
-        switch (payment.getPaymentMethod()){
-            case PIX -> processPix(payment);
-            case CREDIT_CARD -> processCreditCard(payment);
-            case BANK_TRANSFER -> processBankTransfer(payment);
-        }
-    }
+        PaymentProcessor paymentProcessor = paymentProcessors.stream()
+                .filter(candidate -> candidate.supports(payment.getPaymentMethod()))
+                .findFirst().orElseThrow(() -> new IllegalArgumentException(
+                        "Unsupported Payment Method: " + payment.getPaymentMethod()));
 
-    private void processBankTransfer(Payment payment) {
-        System.out.println("Processing PIX payment");
-        payment.setStatus(PaymentStatus.APPROVED);
-    }
-
-    private void processCreditCard(Payment payment) {
-        System.out.println("Processing credit card payment");
-        payment.setStatus(PaymentStatus.APPROVED);
-        
-    }
-
-    private void processPix(Payment payment) {
-        System.out.println("Processing bank transfer payment");
-        payment.setStatus(PaymentStatus.PENDING);
+        paymentProcessor.process(payment);
     }
 }
