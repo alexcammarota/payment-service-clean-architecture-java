@@ -1,4 +1,4 @@
-package com.alexcammarota.payment_service.model;
+package com.alexcammarota.payment_service.domain.model;
 
 public enum PaymentStatus {
     PENDING,

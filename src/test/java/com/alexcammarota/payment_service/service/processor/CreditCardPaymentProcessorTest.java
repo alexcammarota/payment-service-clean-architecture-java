@@ -1,7 +1,9 @@
 package com.alexcammarota.payment_service.service.processor;
 
-import com.alexcammarota.payment_service.model.PaymentMethod;
-import com.alexcammarota.payment_service.model.PaymentStatus;
+import com.alexcammarota.payment_service.application.port.output.PaymentProcessor;
+import com.alexcammarota.payment_service.domain.model.PaymentMethod;
+import com.alexcammarota.payment_service.domain.model.PaymentStatus;
+import com.alexcammarota.payment_service.infrastructure.payment.CreditCardPaymentProcessor;
 
 class CreditCardPaymentProcessorTest
         extends PaymentProcessorContractTest {

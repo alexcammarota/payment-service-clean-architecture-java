@@ -1,17 +1,15 @@
-package com.alexcammarota.payment_service.service;
+package com.alexcammarota.payment_service.application.processor;
 
-import com.alexcammarota.payment_service.model.Payment;
-import com.alexcammarota.payment_service.service.processor.PaymentProcessor;
-import org.springframework.stereotype.Component;
+import com.alexcammarota.payment_service.domain.model.Payment;
+import com.alexcammarota.payment_service.application.port.output.PaymentProcessor;
 
 import java.util.List;
 
-@Component
-public class PaymentProcessingService {
+public class PaymentProcessorResolver {
 
     private final List<PaymentProcessor> paymentProcessors;
 
-    public PaymentProcessingService(List<PaymentProcessor> paymentProcessors){
+    public PaymentProcessorResolver(List<PaymentProcessor> paymentProcessors){
         this.paymentProcessors = paymentProcessors;
     }
 

@@ -1,8 +1,8 @@
-package com.alexcammarota.payment_service.dto;
+package com.alexcammarota.payment_service.presentation.rest.response;
 
-import com.alexcammarota.payment_service.model.Payment;
-import com.alexcammarota.payment_service.model.PaymentMethod;
-import com.alexcammarota.payment_service.model.PaymentStatus;
+import com.alexcammarota.payment_service.domain.model.Payment;
+import com.alexcammarota.payment_service.domain.model.PaymentMethod;
+import com.alexcammarota.payment_service.domain.model.PaymentStatus;
 
 import java.math.BigDecimal;
 import java.time.Instant;

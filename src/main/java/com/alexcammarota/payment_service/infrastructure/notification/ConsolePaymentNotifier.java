@@ -1,10 +1,11 @@
-package com.alexcammarota.payment_service.notification;
+package com.alexcammarota.payment_service.infrastructure.notification;
 
-import com.alexcammarota.payment_service.model.Payment;
+import com.alexcammarota.payment_service.application.port.output.PaymentNotifier;
+import com.alexcammarota.payment_service.domain.model.Payment;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ConsolePaymentNotifier implements PaymentNotifier{
+public class ConsolePaymentNotifier implements PaymentNotifier {
 
     @Override
     public void send(Payment payment){
