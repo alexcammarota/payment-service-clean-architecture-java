@@ -3,6 +3,7 @@ package com.alexcammarota.payment_service.service;
 import com.alexcammarota.payment_service.dto.PaymentRequest;
 import com.alexcammarota.payment_service.model.Payment;
 import com.alexcammarota.payment_service.model.PaymentStatus;
+import com.alexcammarota.payment_service.notification.PaymentNotifier;
 import com.alexcammarota.payment_service.repository.PaymentRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +16,16 @@ public class PaymentService {
     private final PaymentValidator paymentValidator;
     private final PaymentProcessingService paymentProcessingService;
     private final PaymentRepository paymentRepository;
-    private final PaymentNotificationService notificationService;
+    private final PaymentNotifier paymentNotifier;
 
     public PaymentService(PaymentValidator paymentValidator,
                           PaymentProcessingService paymentProcessingService,
                           PaymentRepository paymentRepository,
-                          PaymentNotificationService notificationService) {
+                          PaymentNotifier paymentNotifier) {
         this.paymentValidator = paymentValidator;
         this.paymentProcessingService = paymentProcessingService;
         this.paymentRepository = paymentRepository;
-        this.notificationService = notificationService;
+        this.paymentNotifier = paymentNotifier;
     }
 
     public Payment process(PaymentRequest request){
@@ -45,7 +46,7 @@ public class PaymentService {
 
         paymentRepository.save(payment);
 
-        notificationService.send(payment);
+        paymentNotifier.send(payment);
 
         return payment;
     }
